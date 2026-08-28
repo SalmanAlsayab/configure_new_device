@@ -1,13 +1,23 @@
-$ssid = 'meena-health'
-$password = 'MH-HO@Loc1$321'
+# 1. Read the file line by line
+Get-Content .env | 
+# 2. Filter out empty lines and comment lines starting with #
+Where-Object { $_ -and $_ -notmatch '^\s*#' } | 
+# 3. Split each line by the first '=' character and set the variable
+ForEach-Object { 
+    $name, $value = $_ -split '=', 2
+    if ($name) {
+        Set-Content "env:\$($name.Trim())" $value.Trim()
+    }
+}
+
 
 $xmlContent = @"
 <?xml version="1.0"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
-    <name>$ssid</name>
+    <name>$env:ssid</name>
     <SSIDConfig>
         <SSID>
-            <name>$ssid</name>
+            <name>$env:ssid</name>
         </SSID>
     </SSIDConfig>
     <connectionType>ESS</connectionType>
@@ -22,7 +32,7 @@ $xmlContent = @"
             <sharedKey>
                 <keyType>passPhrase</keyType>
                 <protected>false</protected>
-                <keyMaterial>$password</keyMaterial>
+                <keyMaterial>$env:password</keyMaterial>
             </sharedKey>
         </security>
     </MSM>
@@ -36,7 +46,7 @@ $xmlContent | Set-Content -Path $filePath -Encoding Ascii
 netsh wlan add profile filename="$filePath"
 
 # Connect to the network
-netsh wlan connect ssid="$ssid" name="$ssid"
+netsh wlan connect ssid="$env:ssid" name="$env:ssid"
 
 # Clean up the temporary file
 Remove-Item -Path $filePath
