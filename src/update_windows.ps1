@@ -7,4 +7,4 @@ Install-Module -Name PSWindowsUpdate -Force
 # Import it into your current session
 Import-Module PSWindowsUpdate
 
-Get-WindowsUpdate -AcceptAll -Install -AutoReboot
+Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot
