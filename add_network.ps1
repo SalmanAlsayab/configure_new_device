@@ -50,3 +50,5 @@ netsh wlan connect ssid="$env:ssid" name="$env:ssid"
 
 # Clean up the temporary file
 Remove-Item -Path $filePath
+
+Write-Output "connected to $env:ssid wifi"

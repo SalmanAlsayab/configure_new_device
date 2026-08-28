@@ -1,3 +1,5 @@
-$hostname = Read-Host -Prompt "Please enter your name"
+$hostname = Read-Host -Prompt "Please enter new hostname: "
 
-Rename-Computer -NewName $hostname -Restart
+Write-Output "host name changed to $hostname"
+
+Rename-Computer -NewName $hostname

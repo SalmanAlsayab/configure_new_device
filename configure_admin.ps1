@@ -10,6 +10,10 @@ ForEach-Object {
     }
 }
 
+
+
 Enable-LocalUser -Name "Administrator"
+
+Write-Output "Administrator user enabled with password = $env:admin_password"
 
 Set-LocalUser -Name "Administrator" -Password $env:admin_password
