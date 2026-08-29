@@ -1,5 +1,8 @@
+$scriptPath = Split-Path -Path $PSScriptRoot -Parent
+$envPath = Join-Path -Path $scriptPath -ChildPath '.env'
+
 # 1. Read the file line by line
-Get-Content .env | 
+Get-Content $envPath | 
 # 2. Filter out empty lines and comment lines starting with #
 Where-Object { $_ -and $_ -notmatch '^\s*#' } | 
 # 3. Split each line by the first '=' character and set the variable
@@ -10,10 +13,10 @@ ForEach-Object {
     }
 }
 
-
+$SecureString = ConvertTo-SecureString $env:admin_password -AsPlainText -Force
 
 Enable-LocalUser -Name "Administrator"
 
 Write-Output "Administrator user enabled with password = $env:admin_password"
 
-Set-LocalUser -Name "Administrator" -Password $env:admin_password
+Set-LocalUser -Name "Administrator" -Password $SecureString
