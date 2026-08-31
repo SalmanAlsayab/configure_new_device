@@ -1,0 +1,2 @@
+. {Set-ExecutionPolicy Bypass -Scope Process -Force
+. D:/configure_new_device/src/main.ps1}

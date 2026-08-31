@@ -1,3 +1,4 @@
 .env
 test.ps1
 *.exe
+*.msi

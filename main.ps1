@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 $scripts = @(
     'add_network.ps1'
     'configure_admin.ps1'
@@ -10,11 +12,20 @@ New-Item -Path $stagingPath -ItemType Directory -Force | Out-Null
 
 try {
     $filesToStage = @{
-        '.env' = Join-Path -Path $PSScriptRoot -ChildPath '..\.env'
+        '.env' = Join-Path -Path $PSScriptRoot -ChildPath '.env'
     }
 
     foreach ($script in $scripts) {
         $filesToStage[$script] = Join-Path -Path $PSScriptRoot -ChildPath $script
+    }
+
+    $installers = @(
+        'ChromeSetup.exe'
+        'Linkus-desktop-win-setup.exe'
+    )
+
+    foreach ($installer in $installers) {
+        $filesToStage[$installer] = Join-Path -Path $PSScriptRoot -ChildPath $installer
     }
 
     foreach ($file in $filesToStage.Keys) {
