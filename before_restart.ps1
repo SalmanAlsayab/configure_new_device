@@ -4,7 +4,6 @@ $scripts = @(
     'add_network.ps1'
     'configure_admin.ps1'
     'change_hostname.ps1'
-    'update_windows.ps1'
 )
 
 $stagingPath = Join-Path -Path $env:TEMP -ChildPath "configure_new_device_$([guid]::NewGuid())"
@@ -19,15 +18,6 @@ try {
         $filesToStage[$script] = Join-Path -Path $PSScriptRoot -ChildPath $script
     }
 
-    $installers = @(
-        'ChromeSetup.exe'
-        'Linkus-desktop-win-setup.exe'
-    )
-
-    foreach ($installer in $installers) {
-        $filesToStage[$installer] = Join-Path -Path $PSScriptRoot -ChildPath $installer
-    }
-
     foreach ($file in $filesToStage.Keys) {
         $sourcePath = $filesToStage[$file]
 
@@ -39,6 +29,7 @@ try {
     }
 
     Push-Location -Path $stagingPath
+    Write-Output "You can remove the USB now"
     try {
         foreach ($script in $scripts) {
             Write-Output "Running $script"
@@ -56,8 +47,5 @@ try {
 finally {
     Remove-Item -Path $stagingPath -Recurse -Force -ErrorAction SilentlyContinue
 }
-
-Write-Output 'All configuration scripts completed.'
-
 
 Restart-Computer -Force

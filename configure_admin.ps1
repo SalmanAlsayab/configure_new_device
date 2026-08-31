@@ -1,5 +1,7 @@
+$scriptpath = $PSScriptRoot
+$envpath = Join-Path -Path $scriptpath -ChildPath .env
 # 1. Read the file line by line
-Get-Content .env | 
+Get-Content $envpath | 
 # 2. Filter out empty lines and comment lines starting with #
 Where-Object { $_ -and $_ -notmatch '^\s*#' } | 
 # 3. Split each line by the first '=' character and set the variable
