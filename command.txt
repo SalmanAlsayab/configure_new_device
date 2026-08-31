@@ -1,2 +1,9 @@
-. {Set-ExecutionPolicy Bypass -Scope Process -Force
-. D:/configure_new_device/src/main.ps1}
+Command to run before changing hostname and restarting
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; . D:/configure_new_device/before_restart.ps1
+
+
+
+Command to run after changing hostname and restarting
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; . D:/configure_new_device/after_restart.ps1

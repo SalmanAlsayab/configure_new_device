@@ -64,36 +64,41 @@ if (-not $settingsWindow) {
 }
 
 if ($settingsWindow) {
-    $updateButton = Get-UpdateButton -RootElement $settingsWindow
+    for ($i = 1; $i -le 10; $i++) {
 
-    if ($updateButton) {
-        $buttonName = $updateButton.Current.Name
-        Write-Host "Current Button State: $buttonName" -ForegroundColor Cyan
+        $updateButton = Get-UpdateButton -RootElement $settingsWindow
 
-        switch ($buttonName) {
-            { $_ -match "Check for updates" } {
-                Write-Host "Action: System is idle. Triggering check..."
-                $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
-                $invokePattern.Invoke()
-            }
-            { $_ -match "Download|Install|Update now" } {
-                Write-Host "Action: Updates are ready to download/install. Triggering action..."
-                $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
-                $invokePattern.Invoke()
-            }
-            default {
-                $id = $updateButton.Current.AutomationId
-                if ($id -match "CheckForUpdatesButton|CheckForUpdates|Check for updates") {
-                    Write-Host "Action: Found the update button. Triggering it..."
+        if ($updateButton) {
+            $buttonName = $updateButton.Current.Name
+            Write-Host "Current Button State: $buttonName" -ForegroundColor Cyan
+
+            switch ($buttonName) {
+                { $_ -match "Check for updates" } {
+                    Write-Host "Action: System is idle. Triggering check..."
                     $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
                     $invokePattern.Invoke()
                 }
-                else {
-                    Write-Host "Action: Button is currently in state '$buttonName'. No action taken." -ForegroundColor Yellow
+                { $_ -match "Download|Install|Update now|Download & install all" } {
+                    Write-Host "Action: Updates are ready to download/install. Triggering action..."
+                    $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
+                    $invokePattern.Invoke()
+                }
+                default {
+                    $id = $updateButton.Current.AutomationId
+                    if ($id -match "CheckForUpdatesButton|CheckForUpdates|Check for updates") {
+                        Write-Host "Action: Found the update button. Triggering it..."
+                        $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
+                        $invokePattern.Invoke()
+                    }
+                    else {
+                        Write-Host "Action: Button is currently in state '$buttonName'. No action taken." -ForegroundColor Yellow
+                    }
                 }
             }
         }
+        Start-Sleep -Seconds 10
     }
+
     else {
         Write-Warning "Could not find the update button in the Settings/Windows Update window. Try increasing the wait time or checking the current page layout."
     }
@@ -101,5 +106,6 @@ if ($settingsWindow) {
 else {
     Write-Warning "Settings window could not be found."
 }
+
 
 Start-Sleep -Seconds 5

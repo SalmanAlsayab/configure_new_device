@@ -88,4 +88,4 @@ $wshell.SendKeys("~")
 Start-Sleep -Seconds 1
 
 
-start-sleep -Seconds 5
+start-sleep -Seconds 30

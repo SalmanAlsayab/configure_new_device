@@ -28,6 +28,8 @@ try {
     }
 
     Push-Location -Path $stagingPath
+    Write-Output "You can remove the USB now"
+
     try {
         foreach ($script in $scripts) {
             Write-Output "Running $script"

@@ -8,7 +8,7 @@ Add-Type -AssemblyName UIAutomationTypes
 
 $wshell = New-Object -ComObject WScript.Shell
 # execute linkus installer
-$process = Start-Process -FilePath $linkus -ArgumentList "/norestart" -PassThru
+Start-Process -FilePath $linkus -ArgumentList "/norestart" -PassThru
 
 Start-Sleep -Milliseconds 2000
 # bring linkus to foreground

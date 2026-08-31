@@ -48,4 +48,5 @@ finally {
     Remove-Item -Path $stagingPath -Recurse -Force -ErrorAction SilentlyContinue
 }
 
+Start-Sleep -Seconds 2
 Restart-Computer -Force

@@ -1,3 +1,4 @@
+Start-Sleep -Seconds 2
 $hostname = Read-Host -Prompt "Please enter new hostname: "
 
 Write-Output "host name changed to $hostname"
