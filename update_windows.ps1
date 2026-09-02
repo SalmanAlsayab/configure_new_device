@@ -19,7 +19,7 @@ function Get-UpdateButton {
         $name = [string]$button.Current.Name
         $combined = "$id|$name"
 
-        if ($combined -match "CheckForUpdatesButton|CheckForUpdates|Check for updates|Check for Updates|Download|Install|Update now") {
+        if ($combined -match "CheckForUpdatesButton|CheckForUpdates|Check for updates|Check for Updates|Download|Install|Update now|Download & install all") {
             return $button
         }
     }
@@ -64,7 +64,11 @@ if (-not $settingsWindow) {
 }
 
 if ($settingsWindow) {
-    for ($i = 1; $i -le 10; $i++) {
+    Write-Host "Settings window found successfully" -ForegroundColor Green
+    Start-Sleep -Seconds 2  # Let the page fully render
+    
+    for ($i = 1; $i -le 20; $i++) {
+        Write-Host "`nAttempt $i to find and click update button..." -ForegroundColor Cyan
 
         $updateButton = Get-UpdateButton -RootElement $settingsWindow
 
@@ -72,39 +76,33 @@ if ($settingsWindow) {
             $buttonName = $updateButton.Current.Name
             Write-Host "Current Button State: $buttonName" -ForegroundColor Cyan
 
-            switch ($buttonName) {
-                { $_ -match "Check for updates" } {
-                    Write-Host "Action: System is idle. Triggering check..."
-                    $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
-                    $invokePattern.Invoke()
-                }
-                { $_ -match "Download|Install|Update now|Download & install all" } {
-                    Write-Host "Action: Updates are ready to download/install. Triggering action..."
-                    $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
-                    $invokePattern.Invoke()
-                }
-                default {
-                    $id = $updateButton.Current.AutomationId
-                    if ($id -match "CheckForUpdatesButton|CheckForUpdates|Check for updates") {
-                        Write-Host "Action: Found the update button. Triggering it..."
-                        $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
-                        $invokePattern.Invoke()
-                    }
-                    else {
-                        Write-Host "Action: Button is currently in state '$buttonName'. No action taken." -ForegroundColor Yellow
-                    }
-                }
+            if ($buttonName -like "*Download*" -or
+                $buttonName -like "*Install*" -or
+                $buttonName -like "*Update*" -or
+                $buttonName -like "*Download & install all*") {
+                Write-Host "Action: Updates are ready to download/install. Triggering action..." -ForegroundColor Green
+                $invokePattern = $updateButton.GetCurrentPattern(
+                    [System.Windows.Automation.InvokePattern]::Pattern
+                )
+                $invokePattern.Invoke()
+            }
+            elseif ($buttonName -match "CheckForUpdatesButton|CheckForUpdates|Check for updates") {
+                Write-Host "Action: Found the update button. Triggering it..." -ForegroundColor Green
+                $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
+                $invokePattern.Invoke()
+            }
+            else {
+                Write-Host "Action: Button is currently in state '$buttonName'. No action taken." -ForegroundColor Yellow
             }
         }
-        Start-Sleep -Seconds 10
-    }
-
-    else {
-        Write-Warning "Could not find the update button in the Settings/Windows Update window. Try increasing the wait time or checking the current page layout."
+        else {
+            Write-Host "Could not find the update button. Waiting before retry..." -ForegroundColor Yellow
+        }
+        Start-Sleep -Seconds 8
     }
 }
 else {
-    Write-Warning "Settings window could not be found."
+    Write-Host "Settings window could not be found after all attempts." -ForegroundColor Red
 }
 
 

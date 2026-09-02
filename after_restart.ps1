@@ -2,6 +2,7 @@
 
 $scripts = @(
     'join_domain.ps1'
+    'optional_updates'
     'update_windows.ps1'
 )
 
@@ -50,9 +51,9 @@ finally {
 
 Write-Output 'All configuration scripts completed.'
 
-$folder = "C:\ProgramData\Meena\Tools"
+$folder = "C:\Program Files\Adobe\Acrobat DC\Acrobat"
 
-$filename = "PC Name and IP Address.bat"
+$filename = "Acrobat.exe"
 
 $match = Get-ChildItem -Path $folder -Filter $filename -ErrorAction SilentlyContinue
 
