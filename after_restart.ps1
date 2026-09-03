@@ -2,8 +2,8 @@
 
 $scripts = @(
     'join_domain.ps1'
-    'optional_updates'
     'update_windows.ps1'
+    'optional_updates.ps1'
 )
 
 $stagingPath = Join-Path -Path $env:TEMP -ChildPath "configure_new_device_$([guid]::NewGuid())"

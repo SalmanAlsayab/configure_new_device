@@ -19,13 +19,39 @@ function Get-UpdateButton {
         $name = [string]$button.Current.Name
         $combined = "$id|$name"
 
-        if ($combined -match "CheckForUpdatesButton|CheckForUpdates|Check for updates|Check for Updates|Download|Install|Update now|Download & install all") {
+        if ($combined -match "Check for Updates") {
             return $button
         }
     }
 
     return $null
 }
+
+function Get-DownloadButton {
+    param(
+        [System.Windows.Automation.AutomationElement]$RootElement
+    )
+
+    $buttonCondition = [System.Windows.Automation.PropertyCondition]::new(
+        [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
+        [System.Windows.Automation.ControlType]::Button
+    )
+
+    $buttons = $RootElement.FindAll([System.Windows.Automation.TreeScope]::Descendants, $buttonCondition)
+
+    foreach ($button in $buttons) {
+        $id = [string]$button.Current.AutomationId
+        $name = [string]$button.Current.Name
+        $combined = "$id|$name"
+
+        if ($combined -match "Download & install all") {
+            return $button
+        }
+    }
+
+    return $null
+}
+
 
 # Launch Windows Update settings
 Start-Process "ms-settings:windowsupdate"
@@ -69,36 +95,31 @@ if ($settingsWindow) {
     
     for ($i = 1; $i -le 20; $i++) {
         Write-Host "`nAttempt $i to find and click update button..." -ForegroundColor Cyan
-
-        $updateButton = Get-UpdateButton -RootElement $settingsWindow
-
-        if ($updateButton) {
-            $buttonName = $updateButton.Current.Name
-            Write-Host "Current Button State: $buttonName" -ForegroundColor Cyan
-
-            if ($buttonName -like "*Download*" -or
-                $buttonName -like "*Install*" -or
-                $buttonName -like "*Update*" -or
-                $buttonName -like "*Download & install all*") {
-                Write-Host "Action: Updates are ready to download/install. Triggering action..." -ForegroundColor Green
+        try {
+            $updateButton = Get-UpdateButton -RootElement $settingsWindow
+            $downloadButton = Get-DownloadButton -RootElement $settingsWindow
+            if ($updateButton) {
+                Write-Host "Action: Check for updates" -ForegroundColor Green
                 $invokePattern = $updateButton.GetCurrentPattern(
                     [System.Windows.Automation.InvokePattern]::Pattern
                 )
                 $invokePattern.Invoke()
             }
-            elseif ($buttonName -match "CheckForUpdatesButton|CheckForUpdates|Check for updates") {
-                Write-Host "Action: Found the update button. Triggering it..." -ForegroundColor Green
-                $invokePattern = $updateButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)
+            if ($downloadButton) {
+                Write-Host "Action: Download & install" -ForegroundColor Green
+                $invokePattern = $downloadButton.GetCurrentPattern(
+                    [System.Windows.Automation.InvokePattern]::Pattern
+                )
                 $invokePattern.Invoke()
             }
             else {
-                Write-Host "Action: Button is currently in state '$buttonName'. No action taken." -ForegroundColor Yellow
+                Write-Host "Could not find the update or download button. Waiting before retry..." -ForegroundColor Yellow
             }
+            Start-Sleep -Seconds 10
         }
-        else {
-            Write-Host "Could not find the update button. Waiting before retry..." -ForegroundColor Yellow
+        catch {
+            Write-Output
         }
-        Start-Sleep -Seconds 8
     }
 }
 else {
