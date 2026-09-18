@@ -51,7 +51,7 @@ else {
 Start-Sleep -Seconds 10
 # navigate to Entra ID
 $wshell.SendKeys("{TAB}")
-Start-Sleep -Milliseconds 200
+Start-Sleep -Milliseconds 500
 
 # press ENTER
 $wshell.SendKeys("~")
@@ -59,7 +59,7 @@ Start-Sleep -Seconds 5
 
 # input Domain name
 $wshell.SendKeys("$env:domain_name")
-Start-Sleep -Milliseconds 200
+Start-Sleep -Milliseconds 500
 
 # press ENTER
 $wshell.SendKeys("~")
@@ -67,7 +67,7 @@ Start-Sleep -Seconds 5
 
 # input Domain password
 $wshell.SendKeys("$env:domain_password")
-Start-Sleep -Milliseconds 200
+Start-Sleep -Milliseconds 500
 
 # press ENTER
 $wshell.SendKeys("~")
@@ -75,14 +75,14 @@ Start-Sleep -Seconds 30
 
 # TAB to navigate to join
 $wshell.SendKeys("{TAB}")
-Start-Sleep -Milliseconds 200
+Start-Sleep -Milliseconds 500
 
 $wshell.SendKeys("~")
 Start-Sleep -Seconds 60
 
 # TAB to navigate to DONE
 $wshell.SendKeys("{TAB}")
-Start-Sleep -Milliseconds 200
+Start-Sleep -Milliseconds 500
 
 $wshell.SendKeys("~")
 Start-Sleep -Seconds 1

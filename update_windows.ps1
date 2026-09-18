@@ -115,11 +115,12 @@ if ($settingsWindow) {
             else {
                 Write-Host "Could not find the update or download button. Waiting before retry..." -ForegroundColor Yellow
             }
-            Start-Sleep -Seconds 10
         }
         catch {
-            Write-Output
-        }
+            Write-host "Could not find button" -ForegroundColor red
+            
+        } 
+        Start-Sleep -Seconds 10
     }
 }
 else {
