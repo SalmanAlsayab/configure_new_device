@@ -51,19 +51,22 @@ finally {
 
 Write-Output 'All configuration scripts completed.'
 
-$folder = "C:\Program Files\Adobe\Acrobat DC\Acrobat"
+$Linkus_folder = "C:\Program Files (x86)\Linkus Desktop Client"
+$Linkus_file = "Linkus Desktop Client.exe"
 
-$filename = "Acrobat.exe"
+$Sirateck_folder = "C:\Fakeeh Tecknologies\Siratech.Hybrid.App" 
+$Siratech_file = "YARWebApp.Win"
 
-$match = Get-ChildItem -Path $folder -Filter $filename -ErrorAction SilentlyContinue
-
+$match_linkus = Get-ChildItem -Path $Linkus_folder -Filter $Linkus_file -ErrorAction SilentlyContinue
+$match_sirtech = Get-ChildItem -Path $Sirateck_folder -Filter $Siratech_file -ErrorAction SilentlyContinue
 # check if all files are install from domain
-while (!$match) {
+while (!$match_linkus -and !$match_sirtech) {
     Start-Sleep -Seconds 2
-    $match = Get-ChildItem -Path $folder -Filter $filename -ErrorAction SilentlyContinue
+    $match_linkus = Get-ChildItem -Path $Linkus_folder -Filter $Linkus_file -ErrorAction SilentlyContinue
+    $match_sirtech = Get-ChildItem -Path $Sirateck_folder -Filter $Siratech_file -ErrorAction SilentlyContinue
 
 }
 
-Start-Sleep -Seconds 30
+Start-Sleep -Seconds 120
 
 Restart-Computer -Force
