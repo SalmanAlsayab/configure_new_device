@@ -51,7 +51,7 @@ if ($selection -match '^\d+$' -and $selection -ge 1 -and $selection -le $propert
         </security>
     </MSM>
 </WLANProfile>
-"@
+"@  
 
     $filePath = "$env:TEMP\wifi-profile.xml"
     $xmlContent | Set-Content -Path $filePath -Encoding Ascii

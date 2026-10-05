@@ -3,6 +3,7 @@
 $scripts = @(
     'add_network.ps1'
     'configure_admin.ps1'
+    'timezone.ps1'
     'change_hostname.ps1'
 )
 
@@ -11,7 +12,8 @@ New-Item -Path $stagingPath -ItemType Directory -Force | Out-Null
 
 try {
     $filesToStage = @{
-        '.env' = Join-Path -Path $PSScriptRoot -ChildPath '.env'
+        '.env'           = Join-Path -Path $PSScriptRoot -ChildPath '.env'
+        'passwords.json' = Join-Path -Path $PSScriptRoot -ChildPath 'passwords.json'
     }
 
     foreach ($script in $scripts) {
